@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Reservation</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        .form {
+            max-width: 600px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin: 10px 0 5px;
+            font-size: 16px;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #ffcc00;
+            color: #000;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        button:hover {
+            background: #ffdb4d;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+
+        /* Hide payment form initially */
+        #payment-form {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form">
+        <div class="d-flex justify-content-center align-items-center mb-4">
+            <img src="https://img.icons8.com/?size=60&id=tDvogmMv5g8e&format=png" alt="Parking Icon" width="40" height="40" class="me-2">
+            <h3 class="mb-0">Reserve Your Parking Spot</h3>
+          </div>
+          
+        <!-- City & Location Selection -->
+        <label for="city">Select City:</label>
+        <select class="form-select" id="city" required>
+            <option value="">Select City</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Pune">Pune</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Bangalore">Bangalore</option>
+        </select>
+
+        <label for="location">Enter Location:</label>
+        <input type="text" class="form-control" id="location" placeholder="Enter location" required>
+
+        <!-- Reservation Form -->
+        <form id="reservation-form">
+            {% csrf_token %}
+
+            <label for="parking_slot">Select Parking Spot:</label>
+            <select class="form-select" id="parking_slot" required>
+                <option value="">Select Parking Spot</option>
+            </select>
+
+            <label for="start_time">Start Time:</label>
+            <input class="form-control" type="datetime-local" id="start_time" required>
+
+            <label for="end_time">End Time:</label>
+            <input class="form-control" type="datetime-local" id="end_time" required>
+
+            <!-- Payment Information (Initially Hidden) -->
+            <div id="payment-form">
+                <h4>Payment Information</h4>
+                <label for="account_number">Account Number:</label>
+                <input type="text" class="form-control" id="account_number" placeholder="Enter Account Number" required>
+
+                <label for="payment_method">Payment Method:</label>
+                <select class="form-select" id="payment_method" required>
+                    <option value="">Select Payment Method</option>
+                    <option value="credit_card">Credit Card</option>
+                    <option value="paypal">PayPal</option>
+                </select>
+
+                <label for="amount">Amount:</label>
+                <input type="number" class="form-control" id="amount" placeholder="Amount" required readonly>
+
+                <button type="submit" id="paymentBtn">Proceed to Payment</button>
+            </div>
+
+            <button type="button" id="reserveBtn">Reserve Now</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap Toast -->
+    <div class="toast-container">
+        <div id="success-toast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">✅ Reservation Successful!</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Modal -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reservation Confirmed</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">✅ Your parking slot has been reserved successfully!</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const citySelect = document.getElementById("city");
+            const locationInput = document.getElementById("location");
+            const slotSelect = document.getElementById("parking_slot");
+            const reserveBtn = document.getElementById("reserveBtn");
+
+            function fetchParkingData() {
+                const city = document.getElementById("city").value;
+                const location = document.getElementById("location").value.trim();
+                const slotSelect = document.getElementById("parking_slot");
+
+                if (!city || !location) return;
+
+                fetch(`/parking/api/available-slots/?city=${city}&location=${location}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("API Response:", data);  
+                    
+                    slotSelect.innerHTML = '<option value="">Select Parking Spot</option>';
+                    
+                    if (data.slots && data.slots.length > 0) {
+                        data.slots.forEach(slot => {
+                            let option = document.createElement("option");
+                            option.value = slot.slot_number;
+                            option.textContent = `Spot ${slot.slot_number} - ${slot.location}`;
+                            slotSelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => console.error("Error fetching parking data:", error));
+            }
+
+            // Ensure dropdown updates when city/location changes
+            document.getElementById("city").addEventListener("change", fetchParkingData);
+            document.getElementById("location").addEventListener("input", fetchParkingData);
+
+            reserveBtn.addEventListener("click", function () {
+                const slotNumber = document.getElementById("parking_slot").value;
+                const startTime = document.getElementById("start_time").value;
+                const endTime = document.getElementById("end_time").value;
+
+                if (!slotNumber || !startTime || !endTime) {
+                    alert("Please fill all fields before proceeding.");
+                    return;
+                }
+
+                // Redirect to payment.html with reservation details
+                window.location.href = `/parking/payment/?slot=${slotNumber}&start=${startTime}&end=${endTime}`;
+        });
+    });
+
+    </script>
+
+</body>
+</html>
+{% endblock %}

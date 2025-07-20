@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Availability</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<style>
+    .hero-section {
+        background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMgks3N6KDudQEmjS_FDQO27Rx4pNmhy_d5w&s") no-repeat center center;
+        background-size: cover;
+        height: 350px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero-section h1 {
+        font-size: 3rem;
+        font-weight: bold;
+    }
+
+</style>
+<body>
+    <div class="container">
+    <div class="hero-section">
+        <h1>Real-Time Parking Availability</h1>
+    </div><br>
+    <div class="input-group mb-3">
+        <select id="city-select" class="form-select">
+            <option value="">Select City</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Pune">Pune</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Bangalore">Bangalore</option>
+        </select>
+
+        <input type="text" id="search-location" class="form-control" placeholder="Enter location">
+        <button id="search-btn" class="btn btn-primary">Search</button>
+    </div>
+
+    <p><strong>City: </strong><span id="selected-city">None</span></p>
+    <p><strong>Available Slots: </strong><span id="available-slots">0</span></p>
+    <p><strong>Occupied Slots: </strong><span id="occupied-slots">0</span></p>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Slot Number</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="parking-table">
+            <tr><td colspan="4">Select a city and location to see availability...</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <script>
+        const citySelect = document.getElementById('city-select');
+        const locationInput = document.getElementById('search-location');
+        const searchBtn = document.getElementById('search-btn');
+    
+        function fetchParkingData() {
+            let city = citySelect.value;
+            let location = locationInput.value.trim();
+    
+            if (!city) {
+                alert("Please select a city!");
+                return;
+            }
+    
+            document.getElementById('selected-city').innerText = city;
+            document.getElementById('available-slots').innerText = "0";
+            document.getElementById('occupied-slots').innerText = "0";
+    
+            let parkingTable = document.getElementById('parking-table');
+            parkingTable.innerHTML = `<tr><td colspan="4">Fetching data...</td></tr>`;
+    
+            fetch(`/parking/api/parking-slots/?city=${city}&location=${location}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("API Response:", data);
+    
+                    if (!data.parking_slots) {
+                        throw new Error("Invalid API response: missing parking_slots");
+                    }
+    
+                    document.getElementById('available-slots').innerText = data.available_slots || 0;
+                    document.getElementById('occupied-slots').innerText = data.occupied_slots || 0;
+                    parkingTable.innerHTML = "";
+    
+                    if (data.parking_slots.length === 0) {
+                        parkingTable.innerHTML = `<tr><td colspan="4">No slots available</td></tr>`;
+                    } else {
+                        data.parking_slots.forEach(slot => {
+                            let reserveButton = slot.status === "Available"
+                                ? `<button class="btn btn-success btn-sm" onclick="reserveSlot('${slot.slot_number}', '${slot.location}', '${city}')">Reserve</button>`
+                                : `<button class="btn btn-secondary btn-sm" disabled>Occupied</button>`;
+    
+                            let row = `<tr>
+                                <td>${slot.slot_number}</td>
+                                <td>${slot.location}</td>
+                                <td>${slot.status}</td>
+                                <td>${reserveButton}</td>
+                            </tr>`;
+                            parkingTable.innerHTML += row;
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching parking data:", error);
+                    parkingTable.innerHTML = `<tr><td colspan="4">Error fetching data: ${error.message}</td></tr>`;
+                });
+        }
+    
+        function reserveSlot(slotNumber, location, city) {
+            window.location.href = `/parking/reservation/?slot_number=${slotNumber}&location=${location}&city=${city}`;
+        }
+    
+        searchBtn.addEventListener('click', fetchParkingData);
+    </script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{% endblock %}

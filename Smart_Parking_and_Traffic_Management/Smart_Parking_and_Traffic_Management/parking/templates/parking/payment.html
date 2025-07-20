@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Select2 for searchable dropdown -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            background: url("https://images.unsplash.com/photo-1605902711622-cfb43c44367f") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .payment-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.15);
+            max-width: 600px;
+            margin: auto;
+            margin-top: 60px;
+        }
+
+        .form-label i {
+            margin-right: 6px;
+            color: #0d6efd;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 38px;
+        }
+
+        .bank-option img {
+            height: 20px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="payment-card">
+        <h3 class="text-center mb-4"><i class="bi bi-credit-card-2-back-fill"></i> Complete Your Payment</h3>
+
+        <form id="payment-form" method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="account_number" class="form-label"><i class="bi bi-person-badge"></i>Account Number</label>
+                <input type="text" class="form-control" id="account_number" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="payment_method" class="form-label"><i class="bi bi-currency-exchange"></i>Payment Method</label>
+                <select class="form-select" id="payment_method" required>
+                    <option value="">Select Payment Method</option>
+                    <option value="credit_card">Credit Card</option>
+                    <option value="debit_card">Debit Card</option>
+                    <option value="paypal">PayPal</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="bank_name" class="form-label"><i class="bi bi-bank"></i>Bank Name</label>
+                <select class="form-select js-example-templating" id="bank_name" required>
+                    <option value="">Select Bank</option>
+                    <option value="sbi" data-image="https://logo.clearbit.com/sbi.co.in">State Bank of India</option>
+                    <option value="hdfc" data-image="https://logo.clearbit.com/hdfcbank.com">HDFC Bank</option>
+                    <option value="icici" data-image="https://logo.clearbit.com/icicibank.com">ICICI Bank</option>
+                    <option value="axis" data-image="https://logo.clearbit.com/axisbank.com">Axis Bank</option>
+                    <option value="kotak" data-image="https://logo.clearbit.com/kotak.com">Kotak Mahindra</option>
+                    <option value="pnb" data-image="https://logo.clearbit.com/pnbindia.in">Punjab National Bank</option>
+                    <option value="bob" data-image="https://logo.clearbit.com/bankofbaroda.in">Bank of Baroda</option>
+                    <option value="yesbank" data-image="https://logo.clearbit.com/yesbank.in">Yes Bank</option>
+                    <option value="canara" data-image="https://logo.clearbit.com/canarabank.com">Canara Bank</option>
+                    <option value="idfc" data-image="https://logo.clearbit.com/idfcfirstbank.com">IDFC First Bank</option>
+                </select>                
+            </div>
+
+            <div class="mb-3">
+                <label for="ifsc_code" class="form-label"><i class="bi bi-code-square"></i>IFSC Code</label>
+                <input type="text" class="form-control" id="ifsc_code" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="card_number" class="form-label"><i class="bi bi-credit-card"></i>Card Number</label>
+                <input type="text" class="form-control" id="card_number" maxlength="16" placeholder="XXXX XXXX XXXX XXXX" required>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="expiry" class="form-label">Expiry Date</label>
+                    <input type="month" class="form-control" id="expiry" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="cvv" class="form-label">CVV</label>
+                    <input type="password" class="form-control" id="cvv" maxlength="3" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="amount" class="form-label"><i class="bi bi-currency-rupee"></i>Amount</label>
+                <input type="number" class="form-control" id="amount" value="100" readonly>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-cash-stack"></i> Pay Now</button>
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- jQuery & Select2 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+     $(document).ready(function () {
+        function formatBank(option) {
+            if (!option.id) return option.text;
+            var img = $(option.element).data('image');
+            if (img) {
+                return $(
+                    '<span><img src="' + img + '" class="me-2" style="width: 20px; height: 20px;" />' +
+                    option.text + '</span>'
+                );
+            }
+            return option.text;
+        }
+
+        $('#bank_name').select2({
+            templateResult: formatBank,
+            templateSelection: formatBank,
+            placeholder: 'Select Bank',
+            allowClear: true,
+            width: '100%'
+        });
+    });
+    // Handle payment logic (unchanged)
+    document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const slot = urlParams.get("slot");
+        const start = urlParams.get("start");
+        const end = urlParams.get("end");
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        document.getElementById("payment-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const accountNumber = document.getElementById("account_number").value;
+            const paymentMethod = document.getElementById("payment_method").value;
+            const amount = document.getElementById("amount").value;
+
+            if (!accountNumber || !paymentMethod) {
+                alert("Please enter all payment details.");
+                return;
+            }
+
+            fetch("/parking/api/payment/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken
+                },
+                body: JSON.stringify({
+                    account_number: accountNumber,
+                    payment_method: paymentMethod,
+                    amount: amount
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const paymentId = data.payment_id;
+                    return fetch("/parking/api/reserve/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": csrfToken
+                        },
+                        body: JSON.stringify({
+                            slot_number: slot,
+                            start_time: start,
+                            end_time: end,
+                            payment_id: paymentId
+                        })
+                    });
+                } else {
+                    throw new Error(data.message);
+                }
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.success) {
+                    alert("Payment successful!");
+                    window.location.href = "/parking/reservation_success/";
+                } else {
+                    alert("Payment failed: " + result.message);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Error: " + error.message);
+            });
+        });
+    });
+</script>
+</body>
+</html>
+{% endblock %}

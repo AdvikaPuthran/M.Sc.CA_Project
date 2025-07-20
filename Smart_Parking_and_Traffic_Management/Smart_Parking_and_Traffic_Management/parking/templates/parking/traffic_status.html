@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Status</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<style>
+    .hero-section {
+        background: url("https://bestdrivingcenter.com/wp-content/uploads/2023/02/Traffic-Situation-768x499.jpg") no-repeat center center;
+        background-size: cover;
+        height: 350px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero-section h1 {
+        font-size: 3rem;
+        font-weight: bold;
+    }
+
+</style>
+<body>
+    <div class="container">
+        <div class="hero-section">
+            <h1>Real-Time Traffic Status</h1>
+        </div><br>
+    <!-- City & Location Selection -->
+    <div class="input-group mb-3">
+        <select id="city-select" class="form-select">
+            <option value="">Select City</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Pune">Pune</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Bangalore">Bangalore</option>
+        </select>
+
+        <input type="text" id="search-location" class="form-control" placeholder="Enter location (e.g., Main Street)">
+        <button id="search-btn" class="btn btn-primary">Search</button>
+    </div>
+
+    <!-- Display Traffic Stats -->
+    <p><strong>City: </strong><span id="selected-city">None</span></p>
+    <p><strong>Traffic Congestion Level: </strong><span id="congestion-level">-</span></p>
+
+    <!-- Traffic Data Table -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Location</th>
+                <th>Congestion Level</th>
+            </tr>
+        </thead>
+        <tbody id="traffic-table">
+            <tr><td colspan="2">Select a city and location to see traffic updates...</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <script>
+        function fetchTrafficStatus() {
+            let city = document.getElementById("city-select").value.trim();
+            let location = document.getElementById("search-location").value.trim();
+            
+            let congestionLevel = document.getElementById("congestion-level");
+            let trafficTable = document.getElementById("traffic-table");
+            let selectedCity =  document.getElementById('selected-city').innerText = city;
+            
+            // Clear previous data
+            congestionLevel.innerText = "-";
+            trafficTable.innerHTML = `<tr><td colspan="2">Loading...</td></tr>`;
+
+            // Prevent empty requests
+            if (!city || !location) {
+                trafficTable.innerHTML = `<tr><td colspan="2" class="text-danger">Please select a city and location.</td></tr>`;
+                return;
+            }
+
+            fetch(`/parking/api/traffic-status/?city=${city}&location=${location}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Traffic API Response:", data);  // Debugging log
+
+                    // Clear previous data
+                    trafficTable.innerHTML = "";
+
+                    if (data.traffic_data && data.traffic_data.length > 0) {
+                        congestionLevel.innerText = data.traffic_data[0].congestion_level;
+                        
+                        data.traffic_data.forEach(traffic => {
+                            let row = `<tr>
+                                <td>${traffic.location}</td>
+                                <td>${traffic.congestion_level}</td>
+                            </tr>`;
+                            trafficTable.innerHTML += row;
+                        });
+                    } else {
+                        trafficTable.innerHTML = `<tr><td colspan="2">No traffic data available</td></tr>`;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching traffic data:", error);
+                    trafficTable.innerHTML = `<tr><td colspan="2" class="text-danger">Error fetching data</td></tr>`;
+                });
+        }
+
+        // Attach event listener to search button
+        document.getElementById("search-btn").addEventListener("click", fetchTrafficStatus);
+        // Auto-refresh traffic data every 10 seconds
+        setInterval(() => {
+            // Re-trigger the fetchTrafficStatus function if city and location are selected
+            const city = document.getElementById("city-select").value.trim();
+            const location = document.getElementById("search-location").value.trim();
+    
+            if (city && location) {
+                fetchTrafficStatus();
+            }
+        }, 30000); // 10,000 milliseconds = 10 seconds
+
+    </script>
+</body>
+</html>
+{% endblock %}

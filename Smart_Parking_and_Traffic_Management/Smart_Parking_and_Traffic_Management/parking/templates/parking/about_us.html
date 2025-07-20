@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}About Us{% endblock %}
+{% block content %}
+{% load static %}
+<style>
+    .hero-section {
+        background: url("{% static 'images/unsplash_img.jpg' %}") no-repeat center center;
+        background-size: cover;
+        height: 350px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero-section h1 {
+        font-size: 3rem;
+        font-weight: bold;
+    }
+
+    .about-container {
+        margin-top: -80px;
+        background-color: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-section h2 {
+        color: black;
+        margin-bottom: 20px;
+    }
+
+    .about-section p {
+        line-height: 1.8;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="hero-section">
+    <h1>About Us</h1>
+</div>
+
+<div class="container about-container">
+    <div class="about-section text-center">
+        <h2>Welcome to Smart Parking System</h2>
+        <p>
+            Our mission is to make urban parking smarter, more efficient, and stress-free. With real-time slot availability,
+            traffic integration, and reservation options, our system reduces congestion and saves time for commuters.
+        </p>
+        <p>
+            This platform aims to demonstrate
+            the future of intelligent parking. Whether you're a city planner or a tech enthusiast, our goal is to showcase
+            what's possible in the smart transportation space.
+        </p>
+        <p>
+            This website is built for creating sustainable and user-friendly solutions.
+        </p>
+    </div>
+</div>
+{% endblock %}
