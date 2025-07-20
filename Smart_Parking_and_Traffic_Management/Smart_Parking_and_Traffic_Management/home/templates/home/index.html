@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <title>Home | Smart Parking and Traffic Management</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin-bottom: 80px;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0 !important;
+            padding: 0 !important;
+            background-color: white !important; /* Ensure correct background */
+        }
+
+        a {
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        h1, h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+        }
+
+        /* Header and Navigation */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px 0;
+        }
+
+            header nav ul {
+                list-style-type: none;
+                text-align: center;
+            }
+
+                header nav ul li {
+                    display: inline;
+                    margin: 0 15px;
+                }
+
+                    header nav ul li a {
+                        color: white;
+                        font-size: 1.1rem;
+                    }
+
+        /* Hero Section */
+        .hero {
+            background-color: #4CAF50;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+            .hero h1 {
+                font-size: 3rem;
+                margin-bottom: 20px;
+            }
+
+            .hero p {
+                font-size: 1.25rem;
+                margin-bottom: 30px;
+            }
+
+            .hero .btn-primary {
+                background-color: #ff6f61;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-size: 1.1rem;
+                margin: 10px;
+            }
+
+        /* Feature Cards Section */
+        .features {
+            padding: 40px 20px;
+            text-align: center;
+            background-color: #ffffff;
+        }
+
+        .feature-cards {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            width: 25%;
+        }
+
+            .feature-card h3 {
+                font-size: 1.75rem;
+            }
+
+        /* About Section */
+        .about {
+            padding: 40px 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 40px 20px;
+            text-align: center;
+            background-color: #ffffff;
+        }
+
+        .testimonial-cards {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .testimonial-card {
+            background-color: #f0f0f0;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            width: 40%;
+        }
+
+            .testimonial-card p {
+                font-style: italic;
+            }
+
+        /* Remove extra spacing in the parent header */
+        header {
+            margin: 0 !important;
+            padding: 0 !important;
+            background-color: black !important; /* Ensure no grey */
+        }
+
+           /* Background Section */
+           .hero-section {
+            position: relative;
+            width: 100%;
+            height: 725px;
+            background: url("{% static 'images/parking_slots.png' %}") center/cover no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Blur Effect for Background */
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(2px); /* Slight Blur */
+            z-index: 0;
+        }
+
+        /* Text Styling */
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            font-weight: bold;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Adds shadow for better visibility */
+        }
+
+        /* Button Styling */
+        .hero-content a {
+            margin: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 20px;
+        }
+        /* General container styling */
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Card styling */
+.card {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s;
+    background-color: #f8f9fa;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+card:hover h5,
+card:hover p {
+    color: white;
+}
+
+.card-body {
+    padding: 30px 20px;
+}
+
+.card-body img {
+    display: block;
+    margin: 0 auto 15px auto;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #343a40;
+}
+
+.card-text {
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+.feature-card {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.feature-card:hover {
+    background-color: green; /* Optional: blue background */
+    color: white;
+}
+
+.feature-card:hover h5,
+.feature-card:hover p {
+    color: white;
+}
+
+
+/* Responsive layout tweaks */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 20px 15px;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+    }
+}
+
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var navbarToggler = document.querySelector(".navbar-toggler");
+            navbarToggler.addEventListener("click", function () {
+                var navbarCollapse = document.querySelector("#navbarNav");
+                navbarCollapse.classList.toggle("show");
+            });
+        });
+    </script>      
+</head>
+<body>
+    <!-- Main Content Section -->
+    <main>
+       <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1><b>Welcome to Smart Parking & Traffic Management</b></h1>
+            <p>Your solution for efficient parking and seamless traffic flow.</p>
+            <a href="{% url 'parking:parking_slots_page' %}" class="btn btn-primary">Find Parking</a>
+            <a href="{% url 'parking:traffic_status_page' %}" class="btn btn-danger">Check Traffic</a>
+        </div>
+    </section>      
+     <!-- Key Features Section -->
+     <div class="container mt-5">
+        <h2 class="text-center mb-4">Key Features</h2>
+        <div class="row text-center">
+            <!-- Real-time Parking Availability -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'parking:parking_slots_page' %}" class="text-decoration-none text-dark">
+                    <div class="card shadow h-100">
+                        <div class="card-body">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3731/3731385.png" alt="Car Parking Location Icon" style="width: 75px; margin-bottom: 10px;">
+                            <h5 class="card-title">Real-time Parking Availability</h5>
+                            <p class="card-text">Find available parking spots in your vicinity instantly.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Live Traffic Monitoring -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'parking:traffic_status_page' %}" class="text-decoration-none text-dark">
+                    <div class="card shadow h-100">
+                        <div class="card-body">
+                            <img src="https://cdn-icons-png.flaticon.com/512/1457/1457815.png" alt="Traffic Light Icon" style="width: 75px; margin-bottom: 10px;">
+                            <h5 class="card-title">Live Traffic Monitoring</h5>
+                            <p class="card-text">Stay updated on traffic conditions, accidents, and road closures.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Parking Reservation -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'parking:parking_reservation_page' %}" class="text-decoration-none text-dark">
+                    <div class="card shadow h-100">
+                        <div class="card-body">
+                            <img src="{% static 'images/reservation_icon.png' %}" alt="Reservation Icon" style="width: 100px; margin-bottom: 10px;">
+                            <h5 class="card-title">Parking Reservation</h5>
+                            <p class="card-text">Reserve your parking spot in advance for convenience and peace of mind.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br>
+    
+        <!-- About Us Section -->
+        <section class="about">
+            <h2>About Us</h2>
+            <p>
+                Our Smart Parking and Traffic Management system leverages modern technology to make urban transportation smarter.
+                By monitoring parking availability and live traffic data, we aim to reduce congestion and improve daily commuting.
+            </p>
+            <a href="parking/about_us_page/" class="btn btn-primary">Learn More</a>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials">
+            <h2>What Users Say</h2>
+            <div class="testimonial-cards">
+                <div class="testimonial-card">
+                    <p>"This system saved me so much time! I was able to find parking right when I needed it!"</p>
+                    <strong>- Aditya, Commuter</strong>
+                </div>
+                <div class="testimonial-card">
+                    <p>"I love the live traffic updates! It's so easy to plan my route now."</p>
+                    <strong>- Vaishnavi, Daily Traveller</strong>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
+{% endblock %}
