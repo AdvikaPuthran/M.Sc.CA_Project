@@ -8,22 +8,25 @@ simulated without any physical hardware or third-party payment integration.
 <b>Web Framework:</b> Django 5.1.6
 
 <b>Steps to run this website:</b>
-1. Install Python
+1. Install Visual Studio Code 1.99.3 and MySQL Workbench 8.0 CE
+2. Install Python
 Make sure Python is installed on your system.
 
 To check:
 
 python --version  # or python3 --version
 Download: https://www.python.org/downloads/
+3. Set up environment variables if required. Add Python to the path.
+4. Open Visual Studio Code 1.99.3 and open the Smart_Parking_and_Traffic_Management project folder in it.
 
-2. Create & Activate a Virtual Environment (optional but recommended)
-# Create virtual environment (name can be anything, e.g., venv)
+5. Create & Activate a Virtual Environment (optional but recommended)
+Create virtual environment (name can be anything, e.g., venv)
 python -m venv venv
 
-# Activate it
-# For Windows:
+Activate it
+For Windows:
 venv\Scripts\activate
-# For macOS/Linux:
+For macOS/Linux:
 source venv/bin/activate
 3. Install Required Dependencies
 Check if a requirements.txt file exists. If yes:
