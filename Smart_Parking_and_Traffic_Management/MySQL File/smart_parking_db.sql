@@ -168,3 +168,57 @@ UPDATE parking_reservation SET slot_id = 1 WHERE slot_id IS NULL;
 DESC parking_reservation;
 SHOW CREATE TABLE parking_reservation;
 DROP TABLE IF EXISTS parking_slot;
+
+INSERT INTO parking_slot (slot_number, location, city, status) VALUES
+('A1', 'Andheri West, near Infiniti Mall', 'Mumbai', 'Available'),
+('B2', 'Andheri West, near Infiniti Mall', 'Mumbai', 'Occupied'),
+('C3', 'Andheri West, near Infiniti Mall', 'Mumbai', 'Available'),
+('D4', 'Andheri West, near Infiniti Mall', 'Mumbai', 'Occupied'),
+('E5', 'Andheri West, near Infiniti Mall', 'Mumbai', 'Available'),
+('F6', 'Andheri West, near Infiniti Mall', 'Mumbai', 'Available'),
+('G1', 'Bandra, Linking Road (opposite Starbucks)', 'Mumbai', 'Available'),
+('H2', 'Bandra, Linking Road (opposite Starbucks)', 'Mumbai', 'Occupied'),
+('I3', 'Bandra, Linking Road (opposite Starbucks)', 'Mumbai', 'Available'),
+('J4', 'Bandra, Linking Road (opposite Starbucks)', 'Mumbai', 'Available'),
+
+('A1', 'Baner Road, near D-Mart', 'Pune', 'Available'),
+('B2', 'Baner Road, near D-Mart', 'Pune', 'Available'),
+('C3', 'Baner Road, near D-Mart', 'Pune', 'Occupied'),
+('D4', 'Baner Road, near D-Mart', 'Pune', 'Occupied'),
+('E5', 'Baner Road, near D-Mart', 'Pune', 'Available'),
+('F6', 'Baner Road, near D-Mart', 'Pune', 'Available'),
+('G7', 'Kothrud, near Karishma Society', 'Pune', 'Available'),
+('H8', 'Kothrud, near Karishma Society', 'Pune', 'Available'),
+('I9', 'Kothrud, near Karishma Society', 'Pune', 'Occupied'),
+('J10', 'Kothrud, near Karishma Society', 'Pune', 'Available'),
+('K11', 'Kothrud, near Karishma Society', 'Pune', 'Occupied'),
+
+('A1', 'Connaught Place, Gate 5 (PVR Area)', 'Delhi', 'Available'),
+('B2', 'Connaught Place, Gate 5 (PVR Area)', 'Delhi', 'Occupied'),
+('C3', 'Connaught Place, Gate 5 (PVR Area)', 'Delhi', 'Available'),
+('D4', 'Connaught Place, Gate 5 (PVR Area)', 'Delhi', 'Occupied'),
+('E5', 'Connaught Place, Gate 5 (PVR Area)', 'Delhi', 'Available'),
+('M13', 'Saket, near Select Citywalk Mall', 'Delhi', 'Available'),
+('L14', 'Saket, near Select Citywalk Mall', 'Delhi', 'Available'),
+('N15', 'Saket, near Select Citywalk Mall', 'Delhi', 'Occupied'),
+('O16', 'Saket, near Select Citywalk Mall', 'Delhi', 'Available'),
+
+('A1', 'Koramangala 5th Block, near Café Coffee Day', 'Bangalore', 'Available'),
+('B2', 'Koramangala 5th Block, near Café Coffee Day', 'Bangalore', 'Occupied'),
+('C3', 'Koramangala 5th Block, near Café Coffee Day', 'Bangalore', 'Available'),
+('D4', 'Koramangala 5th Block, near Café Coffee Day', 'Bangalore', 'Available'),
+('E5', 'Koramangala 5th Block, near Café Coffee Day', 'Bangalore', 'Occupied'),
+('Q17', 'Whitefield, near Forum Mall', 'Bangalore', 'Available'),
+('R18', 'Whitefield, near Forum Mall', 'Bangalore', 'Available'),
+('S19', 'Whitefield, near Forum Mall', 'Bangalore', 'Available'),
+('T20', 'Whitefield, near Forum Mall', 'Bangalore', 'Occupied');
+
+INSERT INTO traffic_status (city, location, congestion_level) VALUES
+('Mumbai', 'Andheri West, near Infiniti Mall', 2),
+('Mumbai', 'Bandra, Linking Road (opposite Starbucks)', 3),
+('Pune', 'Baner Road, near D-Mart', 1),
+('Pune', 'Kothrud, near Karishma Society', 2),
+('Delhi', 'Connaught Place, Gate 5 (PVR Area)', 2),
+('Delhi', 'Saket, near Select Citywalk Mall', 2),
+('Bangalore', 'Koramangala 5th Block, near Café Coffee Day', 3),
+('Bangalore', 'Whitefield, near Forum Mall', 3);
